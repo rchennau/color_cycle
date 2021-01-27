@@ -19,7 +19,7 @@ int main (void) {
 
 	for (i = 0; i <= 512; i++) {
 		POKEW(710,i);
-		printf("%s %d", text, i);
+		printf("%s %d ", text, i);
 		sleep(1);
 	}
 	return EXIT_SUCCESS;
