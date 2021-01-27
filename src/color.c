@@ -17,10 +17,10 @@ int main (void) {
 	POKEW(710,192);
 	clrscr();
 
-	for (i = 0; i <= 512; i++) {
+	for (i = 0; i <= 256; i++) {
 		POKEW(710,i);
 		printf("%s %d ", text, i);
-		sleep(1);
 	}
+	sleep(10);
 	return EXIT_SUCCESS;
 }
