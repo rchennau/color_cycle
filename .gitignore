@@ -1,0 +1,5 @@
+obj/*
+src/*.s
+src/*.swp
+*.swp
+

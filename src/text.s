@@ -1,2 +1,2 @@
 .export _text
-_text: .asciiz "Hello World!"
+_text: .asciiz "PEEK 710 "
