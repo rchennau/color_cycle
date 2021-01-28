@@ -23,7 +23,7 @@ int main (void) {
 	_graphics(2);   		// change to gr.2
 	screen = (char *) SAVMSC;	// asign the screen address to a var
 	
-	bgcolor(COLOR_BLACK);		// set the background color to black
+	bgcolor(COLOR_BLACK);	// set the background color to black
 	POKEW(710,192);			// set the color to green for the font
 	clrscr();			// clear the screen
 
