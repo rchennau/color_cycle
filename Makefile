@@ -35,7 +35,7 @@ ASFLAGS =
 
 # Additional linker flags and options.
 # Default: none
-LDFLAGS = -v -vm
+LDFLAGS = -v -vm __RESERVED_MEMORY_=1
 
 # Path to the directory containing C and ASM sources.
 # Default: src
