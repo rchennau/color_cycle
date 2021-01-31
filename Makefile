@@ -35,6 +35,8 @@ ASFLAGS =
 
 # Additional linker flags and options.
 # Default: none
+# For atari you must reserve memory for graphics mode or display list management.  
+# Refer to cl65 and atari documentation for further details.
 LDFLAGS = -v -vm __RESERVED_MEMORY_=1
 
 # Path to the directory containing C and ASM sources.
