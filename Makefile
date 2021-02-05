@@ -37,7 +37,8 @@ ASFLAGS =
 # Default: none
 # For atari you must reserve memory for graphics mode or display list management.  
 # Refer to cl65 and atari documentation for further details.
-LDFLAGS = -v -vm __RESERVED_MEMORY_=1
+# Reference : https://atariage.com/forums/topic/283350-cc65-config-file-for-linker/
+LDFLAGS = -v -vm -D,__RESERVED_MEMORY_=0x1
 
 # Path to the directory containing C and ASM sources.
 # Default: src
