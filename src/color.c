@@ -22,6 +22,7 @@ void custom_screen(char *);
 
 int main (void) {
 	unsigned int y;	
+	unsigned int i;	
 	// static int *x;
 	unsigned char *dlist;
 	unsigned char *color;
@@ -29,6 +30,9 @@ int main (void) {
 	unsigned char *luminance;
 	unsigned char *keypress;
 	unsigned char *keycode;
+	unsigned char COLOR_REG[12] = { COLOR_BLACK, COLOR_WHITE, COLOR_RED, COLOR_CYAN, COLOR_VIOLET, COLOR_GREEN, COLOR_BLUE, COLOR_YELLOW, COLOR_ORANGE, COLOR_BROWN, COLOR_LIGHTRED, COLOR_LIGHTRED };
+	unsigned char current_color_reg;
+
 	// x = display_list();
 	dlist = display_list();
 	// POKE(dlist+3,71);
@@ -38,44 +42,80 @@ int main (void) {
 	// POKE(711,207);
 	_graphics(0);
 	gotoxy(0,0);
-	color = PEEK(710);
+	color = POKE(710,0);
+	current_color_reg = 0;
 	printf("Press up/down to change Hue\nPress left/right to change luminance\n");
 	printf("The current color: %i, %i, %i\n", PEEK(710), PEEK(711), PEEK(712));
+/*
+	
+	for (i = 0; i <=12; i++) {
+		printf("COLOR_REG = %i ", COLOR_REG[i]);
+		current_color_reg++;
+		POKE(710,COLOR_REG[current_color_reg]);
+		sleep(1);
+	}
+		current_color_reg=0;
+	
+	for (i = 8; i <=15; i=i+2) {
+		POKE(710,i);
+		printf("DG %i ", i);
+		sleep(1);
+	}
+	for (i = 16; i <=24; i=i+2) {
+		POKE(710,i);
+		printf("W %i ", i);
+		sleep(1);
+	}
+	for (i = 25; i <=33; i=i+2) {
+		POKE(710,i);
+		printf("G %i ", i);
+		sleep(1);
+	}
+*/
+	
+	/*******************************************************************
+	 * Test for up, down, left and right and set the color accordingly *
 
+	
 	/*******************************************************************
 	 * Test for up, down, left and right and set the color accordingly *
 	 * 
 	 */
-	
 	while (1) {
 		*keypress = cgetc();
 		gotoxy(0,14);
 		if ((*keypress) == 28) {
-			printf("Key pressed up : %i\t", *keypress);
-			// color = *hue*16+1+*luminance;
-			hue = *hue*16+1;
-			printf("Peek = %i",PEEK(710));
+			color=color+2;	
+			POKE(710,color);
+			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
 		} 
 		if ((*keypress) == 29) {
-			printf("Key pressed down : %i\t", *keypress);
-			// color = color - *hue*16-1+*luminance;
-			hue = *hue*16-1;
-			printf("Peek = %i",PEEK(710));
-		} 
+			color=color-2;
+			POKE(710,color);
+			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
+		}
 		if ((*keypress) == 30) {
-			printf("Key pressed left : %i\t", *keypress);
-			// color = color + *hue*16+*luminance+1;
-			luminance++;
-			printf("Peek = %i",PEEK(710));
+			if (current_color_reg != 12) 
+				current_color_reg = current_color_reg+1;
+		
+			printf("%i %i\n",PEEK(710), current_color_reg);
+			if (current_color_reg >= 0 && current_color_reg <= 12) {
+				POKE(710,COLOR_REG[current_color_reg]);
+			}
+			
+			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
 		} 
 		if ((*keypress) == 31) {
-			printf("Key pressed right : %i\t", *keypress);
-			luminance--;
-			printf("Peek = %i",PEEK(710));
+			if (current_color_reg != 0) 
+				current_color_reg = current_color_reg-1;
+			
+			printf("%i %i\n",PEEK(710), current_color_reg);
+			if (current_color_reg >= 0 && current_color_reg <= 12) {
+				POKE(710,COLOR_REG[current_color_reg]);
+			}
+			
+			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
 		} 
-		color = *hue*16+*luminance;
-		POKE(710,color);
-		printf("Peek = %i",PEEK(710));
 	}
 	keypress = cgetc();
 	printf("Keypressed : %i\n", *keycode);
