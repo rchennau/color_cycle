@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <conio.h>
@@ -8,6 +7,7 @@
 #include <tgi.h>
 
 extern const char text[]; // Defined in text.s file 
+typedef unsigned char BYTE; // convience alias 
 
 #pragma static-locals (1)  // Declare local variables as static and add them to the zero-page register of the start system
 
@@ -21,17 +21,16 @@ unsigned char * display_list();
 void custom_screen(char *);
 
 int main (void) {
-	unsigned int y;	
-	unsigned int i;	
-	// static int *x;
-	unsigned char *dlist;
-	unsigned char *color;
-	unsigned char *hue;
-	unsigned char *luminance;
-	unsigned char *keypress;
-	unsigned char *keycode;
-	unsigned char COLOR_REG[12] = { COLOR_BLACK, COLOR_WHITE, COLOR_RED, COLOR_CYAN, COLOR_VIOLET, COLOR_GREEN, COLOR_BLUE, COLOR_YELLOW, COLOR_ORANGE, COLOR_BROWN, COLOR_LIGHTRED, COLOR_LIGHTRED };
-	unsigned char current_color_reg;
+	BYTE y;	
+	BYTE x;	
+	BYTE *dlist;
+	BYTE *color;
+	BYTE *hue;
+	BYTE *luminance;
+	BYTE *keypress;
+	BYTE *keycode;
+	BYTE COLOR_REG[12] = { COLOR_BLACK, COLOR_WHITE, COLOR_RED, COLOR_CYAN, COLOR_VIOLET, COLOR_GREEN, COLOR_BLUE, COLOR_YELLOW, COLOR_ORANGE, COLOR_BROWN, COLOR_LIGHTRED, COLOR_LIGHTRED };
+	BYTE current_color_reg;
 
 	// x = display_list();
 	dlist = display_list();
@@ -41,107 +40,89 @@ int main (void) {
 	// POKE(712,207);
 	// POKE(711,207);
 	_graphics(0);
-	gotoxy(0,0);
+	clrscr();
 	color = POKE(710,0);
 	current_color_reg = 0;
-	printf("Press up/down to change Hue\nPress left/right to change luminance\n");
-	printf("The current color: %i, %i, %i\n", PEEK(710), PEEK(711), PEEK(712));
-/*
-	
-	for (i = 0; i <=12; i++) {
-		printf("COLOR_REG = %i ", COLOR_REG[i]);
-		current_color_reg++;
-		POKE(710,COLOR_REG[current_color_reg]);
-		sleep(1);
-	}
-		current_color_reg=0;
-	
-	for (i = 8; i <=15; i=i+2) {
-		POKE(710,i);
-		printf("DG %i ", i);
-		sleep(1);
-	}
-	for (i = 16; i <=24; i=i+2) {
-		POKE(710,i);
-		printf("W %i ", i);
-		sleep(1);
-	}
-	for (i = 25; i <=33; i=i+2) {
-		POKE(710,i);
-		printf("G %i ", i);
-		sleep(1);
-	}
-*/
-	
-	/*******************************************************************
-	 * Test for up, down, left and right and set the color accordingly *
-
-	
+	// printf("Press up/down to change Hue\nPress left/right to change luminance\n");
+	cputs("      Press up/down to change Hue       ");
+	cputs("  Press left/right to change luminance  ");
+	// cprintf("The current color: %i, %i, %i\n", PEEK(710), PEEK(711), PEEK(712));
 	/*******************************************************************
 	 * Test for up, down, left and right and set the color accordingly *
 	 * 
 	 */
+	/*
+	while (1) {
+		cprintf("%c",cgetc());
+	}
+*/
 	while (1) {
 		*keypress = cgetc();
 		gotoxy(0,14);
 		if ((*keypress) == 28) {
 			color=color+2;	
 			POKE(710,color);
-			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
+			gotoxy(20,11);
+			cprintf("%c",0x9C);	
+			gotoxy(20,13);
+			cprintf("%c",0x1D);	
+			gotoxy(19,12);
+			cprintf("%c",0x1E);	
+			gotoxy(21,12);
+			cprintf("%c",0x1F);	
 		} 
 		if ((*keypress) == 29) {
 			color=color-2;
 			POKE(710,color);
-			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
+			gotoxy(20,11);
+			cprintf("%c",0x1C);	
+			gotoxy(20,13);
+			cprintf("%c",0x9D);	
+			gotoxy(19,12);
+			cprintf("%c",0x1E);	
+			gotoxy(21,12);
+			cprintf("%c",0x1F);
 		}
-		if ((*keypress) == 30) {
+		if ((*keypress) == 30) {   // change color hue one register up
 			if (current_color_reg != 12) 
 				current_color_reg = current_color_reg+1;
 		
-			printf("%i %i\n",PEEK(710), current_color_reg);
 			if (current_color_reg >= 0 && current_color_reg <= 12) {
 				POKE(710,COLOR_REG[current_color_reg]);
+				color=PEEK(710);
 			}
-			
-			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
+			gotoxy(20,11);
+			cprintf("%c",0x1C);	
+			gotoxy(20,13);
+			cprintf("%c",0x1D);	
+			gotoxy(19,12);
+			cprintf("%c",0x9E);	
+			gotoxy(21,12);
+			cprintf("%c",0x1F);
 		} 
 		if ((*keypress) == 31) {
 			if (current_color_reg != 0) 
 				current_color_reg = current_color_reg-1;
 			
-			printf("%i %i\n",PEEK(710), current_color_reg);
 			if (current_color_reg >= 0 && current_color_reg <= 12) {
 				POKE(710,COLOR_REG[current_color_reg]);
+				color=PEEK(710);
 			}
-			
-			printf("%i %i\n",PEEK(710), COLOR_REG[current_color_reg]);
+			gotoxy(20,11);	
+			cprintf("%c",0x1C);	
+			gotoxy(20,13);
+			cprintf("%c",0x1D);	
+			gotoxy(19,12);
+			cprintf("%c",0x1E);	
+			gotoxy(21,12);
+			cprintf("%c",0x9F);
 		} 
 	}
-	keypress = cgetc();
-	printf("Keypressed : %i\n", *keycode);
-	keycode = (*keypress/64)-(*keycode*64);
-	printf("Keypressed : %i\n", *keycode);
-	// if (keypress = )	
-	printf("Set Hue:");
-	cscanf("%i",hue);
-	gotoxy(0,20);
-	printf("\tHue set: %i", *hue);
-	printf("\nSet Luminance:");
-	cscanf("%i",luminance);
-	printf("\tLuminance set:%i\n", *luminance);
-	color = *hue*16+luminance;
-	POKE(710,color);
-	// POKE(711,hue);
-	// POKE(712,luminance);
-	
-	printf("What is the current color: %i, %i, %i\n", PEEK(710), PEEK(711), PEEK(712));
-	sleep(4); 
 	/*
 	for (y = 0; y <= 31; y++) {
 	 	printf("Display List %i\t", dlist[y]);	
 	}
 	*/
-	while(1);
 	return EXIT_SUCCESS;
 }
 /*********************************************************************
@@ -160,7 +141,7 @@ void custom_screen(char *x) {
 	// POKE(dlist+5,2);
 	POKE(720,192);		// set color
 	gotoxy(0,0);
-	printf("Hello World\n");
+	cprintf("Hello World\n");
 	display_list();		// call display list function
 }
 /*********************************************************************
@@ -193,8 +174,8 @@ void graphics2() {
 		str_to_internal(txt);		// convert content of text.s to internal screen format (Atasci)	
 		memcpy(&screen[20], txt, strlen(text));	// Copy the contexnt of text to the pointer to the memory address labled screen (copy into RAM). 
 
-		printf("%s\n", text);		// Print the same line to the second print area of the screen 
-		printf("%s and length is:%i\n", *screen, strlen(text));		// Print the same line to the second print area of the screen 
+		cprintf("%s\n", text);		// Print the same line to the second print area of the screen 
+		cprintf("%s and length is:%i\n", *screen, strlen(text));		// Print the same line to the second print area of the screen 
 
 		POKEW(710,i);
 		sleep(2);
