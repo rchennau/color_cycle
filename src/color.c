@@ -1,10 +1,9 @@
 #include <stdlib.h>
-#include <unistd.h>
+// #include <unistd.h>
 #include <conio.h>
 #include <peekpoke.h>
 #include <atari.h>
 #include <string.h>
-#include <tgi.h>
 
 extern const char text[]; // Defined in text.s file 
 typedef unsigned char BYTE; // convience alias 
@@ -56,32 +55,43 @@ int main (void) {
 		cprintf("%c",cgetc());
 	}
 */
+	OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0;
+	gotoxy(20,11);
+	cprintf("%c",0x1C);
+	gotoxy(20,13);
+	cprintf("%c",0x1D);	
+	gotoxy(19,12);
+	cprintf("%c",0x1E);	
+	gotoxy(21,12);
+	cprintf("%c",0x1F);
+
 	while (1) {
 		*keypress = cgetc();
 		gotoxy(0,14);
 		if ((*keypress) == 28) {
 			color=color+2;	
 			POKE(710,color);
+			OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
 			gotoxy(20,11);
-			cprintf("%c",0x9C);	
-			gotoxy(20,13);
-			cprintf("%c",0x1D);	
-			gotoxy(19,12);
-			cprintf("%c",0x1E);	
-			gotoxy(21,12);
-			cprintf("%c",0x1F);	
+			cprintf("%c",0x9C);
+			while (OS.rtclok[2]<10); { 
+				// twiddle thumbs 
+			}	
+			gotoxy(20,11);
+			cprintf("%c",0x1C);
 		} 
 		if ((*keypress) == 29) {
 			color=color-2;
 			POKE(710,color);
-			gotoxy(20,11);
-			cprintf("%c",0x1C);	
 			gotoxy(20,13);
 			cprintf("%c",0x9D);	
-			gotoxy(19,12);
-			cprintf("%c",0x1E);	
-			gotoxy(21,12);
-			cprintf("%c",0x1F);
+			OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
+			while (OS.rtclok[2]<10); { 
+				// twiddle thumbs 
+			}	
+			gotoxy(20,13);
+			cprintf("%c",0x1D);
+
 		}
 		if ((*keypress) == 30) {   // change color hue one register up
 			if (current_color_reg != 12) 
@@ -91,14 +101,14 @@ int main (void) {
 				POKE(710,COLOR_REG[current_color_reg]);
 				color=PEEK(710);
 			}
-			gotoxy(20,11);
-			cprintf("%c",0x1C);	
-			gotoxy(20,13);
-			cprintf("%c",0x1D);	
 			gotoxy(19,12);
-			cprintf("%c",0x9E);	
-			gotoxy(21,12);
-			cprintf("%c",0x1F);
+			cprintf("%c",0x9E);
+			OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
+			while (OS.rtclok[2]<10); { 
+				// twiddle thumbs 
+			}	
+			gotoxy(19,12);
+			cprintf("%c",0x1E);
 		} 
 		if ((*keypress) == 31) {
 			if (current_color_reg != 0) 
@@ -108,14 +118,14 @@ int main (void) {
 				POKE(710,COLOR_REG[current_color_reg]);
 				color=PEEK(710);
 			}
-			gotoxy(20,11);	
-			cprintf("%c",0x1C);	
-			gotoxy(20,13);
-			cprintf("%c",0x1D);	
-			gotoxy(19,12);
-			cprintf("%c",0x1E);	
 			gotoxy(21,12);
 			cprintf("%c",0x9F);
+			OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
+			while (OS.rtclok[2]<10); { 
+				// twiddle thumbs 
+			}	
+			gotoxy(21,12);
+			cprintf("%c",0x1F);
 		} 
 	}
 	/*
@@ -155,7 +165,7 @@ unsigned char * display_list() {
 	unsigned char x = 0;
 	for (x = 0; x <=31; x++) {
 		dlist2[x] = PEEK(dlist+x);
-		sleep(.75);
+		// sleep(.75);
 	}
 
 	return dlist;
@@ -178,7 +188,7 @@ void graphics2() {
 		cprintf("%s and length is:%i\n", *screen, strlen(text));		// Print the same line to the second print area of the screen 
 
 		POKEW(710,i);
-		sleep(2);
+		// sleep(2);
 	}
 	return;
 }
