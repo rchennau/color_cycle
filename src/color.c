@@ -14,7 +14,7 @@ unsigned char * display_list();
 void custom_screen(char *);
 
 void draw_screen(BYTE *, BYTE * , BYTE );
-
+void wait(BYTE);
 int main (void) {
 	BYTE *dlist;
 	BYTE *color;
@@ -56,17 +56,18 @@ int main (void) {
 		if ((*keypress) == 28) {
 			color=color+2;	
 			POKE(710,color);
-			OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
 			draw_screen(20,11,0x9C);
 			/*
 			gotoxy(20,11);
 			cprintf("%c",0x9C);
-			*/
 			while (OS.rtclok[2]<10); { 
 				// twiddle thumbs 
 			}	
-			gotoxy(20,11);
-			cprintf("%c",0x1C);
+			*/
+			wait(12);
+			draw_screen(20,11,0x1C);
+			// gotoxy(20,11);
+			// cprintf("%c",0x1C);
 		} 
 		if ((*keypress) == 29) {
 			color=color-2;
@@ -129,14 +130,21 @@ int main (void) {
 	}
 	return 0;
 }
+/*********************************************************************
+ * wait a specified amount of time in msseconds                     **
+ */
 
-
+void wait(BYTE t) {
+	OS.rtclok[0]=OS.rtclok[1]=OS.rtclok[2]=0; 
+	while (OS.rtclok[2]<t); { 
+		// twiddle thumbs 
+	}	
+}
 /*********************************************************************
  * build_screen and position text on the screen                     ** 
  * 
  */
 void draw_screen(BYTE *x, BYTE *y, BYTE character_code) {
-
 	gotoxy(x,y);
 	cprintf("%c", character_code);
 }
