@@ -117,7 +117,7 @@ endef
 
 # Linker flags for generating a debug file
 define _debugfile_
-  LDFLAGS += -Wl --dbgfile,$$@.dbg
+  LDFLAGS += -Wl --dbgfile $$@.dbg
   REMOVES += $(PROGRAM).dbg
 endef
 
